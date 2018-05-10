@@ -14,8 +14,7 @@ API = API.fillna(value=0)
 API = DataFrame(API, columns=['app_name','user_id', 'log_date', 'install_date', 'payment']).sort_values(by=["user_id", "log_date"])
 P = API['payment'].groupby(API['user_id']).sum()
 API = API.drop_duplicates(['user_id'])
-Payment = pd.DataFrame([P[i] for i in API['user_id']])
-Payment.index = Payment.index + 1
+Payment = pd.Series([P[i] for i in API['user_id']], index=list(API.index))
 API['total_payment'] = Payment
 API['log_date'] = API['log_date'].replace(0, "2013-00")
 API['log_month'] = API['log_date'].map(lambda x :str(x).split('-')[0]+'-'+str(x).split('-')[1])
