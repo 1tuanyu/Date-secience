@@ -1,0 +1,16 @@
+import numpy as np
+import pandas as pd
+from pandas import DataFrame
+import matplotlib.pyplot as plt
+
+DAU = pd.DataFrame(pd.read_csv("E:\\script\\Data secience\\section4-dau.csv"))
+INFO = pd.DataFrame(pd.read_csv("E:\\script\\Data secience\\section4-user_info.csv"))
+
+UI = pd.merge(DAU, INFO, how='outer', on=['user_id', 'app_name'])
+UI = UI.fillna(value=0)
+UI['log_date'] = UI['log_date'].replace(0, "2013-00")
+UI['log_month'] = UI['log_date'].map(lambda x :str(x).split('-')[0]+'-'+str(x).split('-')[1])
+UI['install_month'] = UI['install_date'].map(lambda x :str(x).split('-')[0]+'-'+str(x).split('-')[1])
+#UI = pd.crosstab(UI.log_month, [UI.gender, UI.generation], margins=True)
+UI = UI['device_type'].groupby(UI['log_month']).value_counts()
+print(UI)
